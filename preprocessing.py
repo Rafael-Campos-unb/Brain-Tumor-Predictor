@@ -54,7 +54,7 @@ img_datagen.fit(test_img)
 X_train, X_test, y_train, y_test = train_test_split(np.array(train_img), np.array(train_labels), test_size=0.1)
 # Shape of X, y train and test samples:
 # print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
-
+print(train_img)
 # Visualize some images:
 plt.figure(figsize=(10, 5))
 for i, j in enumerate(train_img):

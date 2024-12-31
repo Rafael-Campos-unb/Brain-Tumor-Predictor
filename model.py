@@ -35,14 +35,13 @@ class CNN_model:
                 keras.layers.Conv2D(kernel_size=self.conv2d_hidden_dim, filters=self.n_filters,
                                     activation=self.activation, padding=self.padding),
                 keras.layers.MaxPool2D(pool_size=self.pool_dim),
-                keras.layers.Conv2D(kernel_size=self.conv2d_hidden_dim, filters=self.n_filters,
+                keras.layers.Conv2D(kernel_size=self.conv2d_hidden_dim, filters=self.last_conv2d_n_filters,
                                     activation=self.activation, padding=self.padding),
                 keras.layers.MaxPool2D(pool_size=self.pool_dim),
                 keras.layers.Flatten(),
                 keras.layers.Dense(units=self.units_in, activation=self.activation),
                 keras.layers.Dropout(rate=0.5),
                 keras.layers.Dense(units=self.units_out, activation=self.output_activation)
-
             ]
         )
 
@@ -50,6 +49,11 @@ class CNN_model:
         self.model.compile(optimizer=self.optimizer, loss=self.loss, metrics=[self.metrics]
                            )
 
-    def fit(self, X_train, X_train_labels):
-        self.model.fit(tf.cast(X_train, tf.float32), np.array(pd.get_dummies(X_train_labels)), validation_split=0.1,
+    def fit(self, X_train, X_train_labels, X_val, X_val_labels):
+        self.model.fit(tf.cast(X_train, tf.float32), np.array(pd.get_dummies(X_train_labels)),
+                       validation_data=(tf.cast(X_val, tf.float32), np.array(pd.get_dummies(X_val_labels))),
+                       validation_split=0.1,
                        epochs=20, verbose=1, batch_size=32)
+
+    def saved_model(self):
+        self.model.save('model.keras')
